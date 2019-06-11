@@ -1,0 +1,142 @@
+Sub stock_homework()
+'set variable to hold stock ticker text
+Dim ticker_symbol As String
+
+'set variable to hold volume by stock ticker and initialize on 0
+Dim ticker_total As Double
+ticker_total = 0
+
+'define last row
+Dim lastrow As Long
+
+'set lastrow
+lastrow = Cells(Rows.Count, 1).End(xlUp).Row
+
+'start the 'pivot' basically tell the code where to put the tickers that I'm going to summarize
+Dim summary_table_row As Double
+
+'tell the summary table to start under the header row (which is row 1)
+summary_table_row = 2
+
+Cells(1, 9).Value = "Ticker"
+Cells(1, 10).Value = "annual change"
+Cells(1, 11).Value = "%change"
+Cells(1, 12).Value = "Total volume"
+
+
+
+'loop through all tickers
+For i = 2 To lastrow
+
+''''''''*****************************************year open variable
+Dim year_open As Double
+
+ 'Conditional to grab year open price
+If Cells(i, 1).Value <> Cells(i - 1, 1).Value Then
+year_open = Cells(i, 3).Value
+
+End If
+''''''''*****************************************year open variable
+               
+'Check if we are still within the same ticker symbol, if it is not...
+If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+    
+    ' Set the ticker symbol
+      ticker_symbol = Cells(i, 1).Value
+
+      ' Add to the Brand Total
+      ticker_total = ticker_total + Cells(i, 7).Value
+
+      ' Print the ticker symbol in the Summary Table
+      Range("I" & summary_table_row).Value = ticker_symbol
+
+      ' Print the ticker total amount to the Summary Table
+      Range("L" & summary_table_row).Value = ticker_total
+
+   
+      
+''''''''*****************************************year close variable
+Dim year_close As Double
+       'Grab year end price
+               year_close = Cells(i, 6).Value
+               
+'''''''*****************************************year close variable
+
+   ''''''''*****************************************year change variable
+Dim year_change As Double
+    
+               year_change = year_open - year_close
+               
+               
+'''''''*****************************************year change variable
+' Print the year change  to the Summary Table
+      Range("j" & summary_table_row).Value = year_change
+      
+'********************************************************** percent change variable
+Dim percent_change As Double
+percent_change = year_close / year_open - 1
+
+ 
+ 'Print the percent change  to the Summary Table
+      Range("k" & summary_table_row).Value = percent_change
+      
+         ' Add one to the summary table row
+      summary_table_row = summary_table_row + 1
+      
+      ' Reset the ticker Total
+      ticker_total = 0
+
+    ' If the cell immediately following a row is the same ticker...
+    Else
+
+      ' Add to the ticker Total
+      ticker_total = ticker_total + Cells(i, 7).Value
+
+    End If
+'*******************************conditional formatting
+
+If Cells(i, 11).Value <= 0 Then
+Cells(i, 11).Interior.ColorIndex = 3
+Else
+Cells(i, 11).Interior.ColorIndex = 4
+
+End If
+
+
+Next i
+
+
+End Sub
+
+'Sub max_min_hard()
+'******* find all summary/max/min values
+
+'Dim max_increase As Double
+'Dim min_increase As Double
+'Dim max_volume As Double
+
+
+'max_increase = Application.WorksheetFunction.Max(Range("k1:k290"))
+'Range("q2") = max_increase
+'min_increase = Application.WorksheetFunction.Min(Range("k1:k290"))
+'Range("q3") = min_increase
+'max_volume = Application.WorksheetFunction.Max(Range("L1:L290"))
+'Range("q4") = max_volume
+
+'********* match to tickers
+
+'Dim percent_column As Double
+'Dim volume_column As Double
+'Dim ticker_column As String
+
+'percent_column = Range("k2:k290")
+'volume_column = Range("L2:L290")
+'ticker_column = Range("I2:I290")
+
+'For i = 2 To 290
+
+'If percent_column = max_increase Then...
+'End If
+
+
+'End Sub
